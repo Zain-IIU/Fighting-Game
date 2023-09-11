@@ -35,13 +35,31 @@ public partial class @MasterInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""HitPunch"",
+                    ""type"": ""Button"",
+                    ""id"": ""7151d42c-99d0-4d23-9af7-86a7b9dfa50a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HitKick"",
+                    ""type"": ""Button"",
+                    ""id"": ""8e547bef-0d94-4988-9010-f286f3b9b564"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": ""WASD"",
                     ""id"": ""8c50795b-f9c3-4797-871d-53b58334229a"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -96,7 +114,7 @@ public partial class @MasterInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Arrow"",
                     ""id"": ""e1b002a3-3749-4756-aa66-3fc16e2fec22"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -151,7 +169,7 @@ public partial class @MasterInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""DPadAnalog"",
                     ""id"": ""e179ae5d-5828-4961-bfe0-0325019afa0e"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -164,7 +182,7 @@ public partial class @MasterInput: IInputActionCollection2, IDisposable
                     ""id"": ""1b1738ab-3a45-4ca7-9f8a-9ddbd0762539"",
                     ""path"": ""<Gamepad>/dpad/up"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""Normalize(max=1)"",
                     ""groups"": """",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
@@ -206,7 +224,7 @@ public partial class @MasterInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""DPadStick"",
                     ""id"": ""295a65ec-627a-4f37-823a-714ad1bafd88"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -219,7 +237,7 @@ public partial class @MasterInput: IInputActionCollection2, IDisposable
                     ""id"": ""22e6fcc9-a5b7-4df8-a0a6-4ea93e32ba84"",
                     ""path"": ""<Gamepad>/leftStick/up"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""Normalize(max=1)"",
                     ""groups"": """",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
@@ -230,7 +248,7 @@ public partial class @MasterInput: IInputActionCollection2, IDisposable
                     ""id"": ""730c08c0-b4c6-4472-a0d3-2e9539e7a246"",
                     ""path"": ""<Gamepad>/leftStick/down"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""Normalize(max=1)"",
                     ""groups"": """",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
@@ -257,6 +275,28 @@ public partial class @MasterInput: IInputActionCollection2, IDisposable
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""519d2d97-2df9-428f-afa4-0f51474a296c"",
+                    ""path"": ""<XInputController>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HitPunch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""76e987a3-5be3-4ad0-98df-2c379cd10851"",
+                    ""path"": ""<XInputController>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HitKick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -266,6 +306,8 @@ public partial class @MasterInput: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
+        m_Player_HitPunch = m_Player.FindAction("HitPunch", throwIfNotFound: true);
+        m_Player_HitKick = m_Player.FindAction("HitKick", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -328,11 +370,15 @@ public partial class @MasterInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Movement;
+    private readonly InputAction m_Player_HitPunch;
+    private readonly InputAction m_Player_HitKick;
     public struct PlayerActions
     {
         private @MasterInput m_Wrapper;
         public PlayerActions(@MasterInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
+        public InputAction @HitPunch => m_Wrapper.m_Player_HitPunch;
+        public InputAction @HitKick => m_Wrapper.m_Player_HitKick;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -345,6 +391,12 @@ public partial class @MasterInput: IInputActionCollection2, IDisposable
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
+            @HitPunch.started += instance.OnHitPunch;
+            @HitPunch.performed += instance.OnHitPunch;
+            @HitPunch.canceled += instance.OnHitPunch;
+            @HitKick.started += instance.OnHitKick;
+            @HitKick.performed += instance.OnHitKick;
+            @HitKick.canceled += instance.OnHitKick;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -352,6 +404,12 @@ public partial class @MasterInput: IInputActionCollection2, IDisposable
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
+            @HitPunch.started -= instance.OnHitPunch;
+            @HitPunch.performed -= instance.OnHitPunch;
+            @HitPunch.canceled -= instance.OnHitPunch;
+            @HitKick.started -= instance.OnHitKick;
+            @HitKick.performed -= instance.OnHitKick;
+            @HitKick.canceled -= instance.OnHitKick;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -372,5 +430,7 @@ public partial class @MasterInput: IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnMovement(InputAction.CallbackContext context);
+        void OnHitPunch(InputAction.CallbackContext context);
+        void OnHitKick(InputAction.CallbackContext context);
     }
 }
